@@ -19,6 +19,8 @@ mixin _$EncryptionBlocState {
   bool get isLoading => throw _privateConstructorUsedError;
   List<EncryptedImageModel> get images => throw _privateConstructorUsedError;
   Uint8List? get currentPreviewImage => throw _privateConstructorUsedError;
+  EncryptedImageModel? get currentPreviewImageModel =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $EncryptionBlocStateCopyWith<EncryptionBlocState> get copyWith =>
@@ -34,7 +36,8 @@ abstract class $EncryptionBlocStateCopyWith<$Res> {
   $Res call(
       {bool isLoading,
       List<EncryptedImageModel> images,
-      Uint8List? currentPreviewImage});
+      Uint8List? currentPreviewImage,
+      EncryptedImageModel? currentPreviewImageModel});
 }
 
 /// @nodoc
@@ -53,6 +56,7 @@ class _$EncryptionBlocStateCopyWithImpl<$Res, $Val extends EncryptionBlocState>
     Object? isLoading = null,
     Object? images = null,
     Object? currentPreviewImage = freezed,
+    Object? currentPreviewImageModel = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -67,6 +71,10 @@ class _$EncryptionBlocStateCopyWithImpl<$Res, $Val extends EncryptionBlocState>
           ? _value.currentPreviewImage
           : currentPreviewImage // ignore: cast_nullable_to_non_nullable
               as Uint8List?,
+      currentPreviewImageModel: freezed == currentPreviewImageModel
+          ? _value.currentPreviewImageModel
+          : currentPreviewImageModel // ignore: cast_nullable_to_non_nullable
+              as EncryptedImageModel?,
     ) as $Val);
   }
 }
@@ -82,7 +90,8 @@ abstract class _$$EncryptionBlocStateImplCopyWith<$Res>
   $Res call(
       {bool isLoading,
       List<EncryptedImageModel> images,
-      Uint8List? currentPreviewImage});
+      Uint8List? currentPreviewImage,
+      EncryptedImageModel? currentPreviewImageModel});
 }
 
 /// @nodoc
@@ -99,6 +108,7 @@ class __$$EncryptionBlocStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? images = null,
     Object? currentPreviewImage = freezed,
+    Object? currentPreviewImageModel = freezed,
   }) {
     return _then(_$EncryptionBlocStateImpl(
       isLoading: null == isLoading
@@ -113,6 +123,10 @@ class __$$EncryptionBlocStateImplCopyWithImpl<$Res>
           ? _value.currentPreviewImage
           : currentPreviewImage // ignore: cast_nullable_to_non_nullable
               as Uint8List?,
+      currentPreviewImageModel: freezed == currentPreviewImageModel
+          ? _value.currentPreviewImageModel
+          : currentPreviewImageModel // ignore: cast_nullable_to_non_nullable
+              as EncryptedImageModel?,
     ));
   }
 }
@@ -123,7 +137,8 @@ class _$EncryptionBlocStateImpl implements _EncryptionBlocState {
   _$EncryptionBlocStateImpl(
       {this.isLoading = false,
       final List<EncryptedImageModel> images = const [],
-      this.currentPreviewImage = null})
+      this.currentPreviewImage = null,
+      this.currentPreviewImageModel = null})
       : _images = images;
 
   @override
@@ -141,10 +156,13 @@ class _$EncryptionBlocStateImpl implements _EncryptionBlocState {
   @override
   @JsonKey()
   final Uint8List? currentPreviewImage;
+  @override
+  @JsonKey()
+  final EncryptedImageModel? currentPreviewImageModel;
 
   @override
   String toString() {
-    return 'EncryptionBlocState(isLoading: $isLoading, images: $images, currentPreviewImage: $currentPreviewImage)';
+    return 'EncryptionBlocState(isLoading: $isLoading, images: $images, currentPreviewImage: $currentPreviewImage, currentPreviewImageModel: $currentPreviewImageModel)';
   }
 
   @override
@@ -156,7 +174,10 @@ class _$EncryptionBlocStateImpl implements _EncryptionBlocState {
                 other.isLoading == isLoading) &&
             const DeepCollectionEquality().equals(other._images, _images) &&
             const DeepCollectionEquality()
-                .equals(other.currentPreviewImage, currentPreviewImage));
+                .equals(other.currentPreviewImage, currentPreviewImage) &&
+            (identical(
+                    other.currentPreviewImageModel, currentPreviewImageModel) ||
+                other.currentPreviewImageModel == currentPreviewImageModel));
   }
 
   @override
@@ -164,7 +185,8 @@ class _$EncryptionBlocStateImpl implements _EncryptionBlocState {
       runtimeType,
       isLoading,
       const DeepCollectionEquality().hash(_images),
-      const DeepCollectionEquality().hash(currentPreviewImage));
+      const DeepCollectionEquality().hash(currentPreviewImage),
+      currentPreviewImageModel);
 
   @JsonKey(ignore: true)
   @override
@@ -176,9 +198,11 @@ class _$EncryptionBlocStateImpl implements _EncryptionBlocState {
 
 abstract class _EncryptionBlocState implements EncryptionBlocState {
   factory _EncryptionBlocState(
-      {final bool isLoading,
-      final List<EncryptedImageModel> images,
-      final Uint8List? currentPreviewImage}) = _$EncryptionBlocStateImpl;
+          {final bool isLoading,
+          final List<EncryptedImageModel> images,
+          final Uint8List? currentPreviewImage,
+          final EncryptedImageModel? currentPreviewImageModel}) =
+      _$EncryptionBlocStateImpl;
 
   @override
   bool get isLoading;
@@ -186,6 +210,8 @@ abstract class _EncryptionBlocState implements EncryptionBlocState {
   List<EncryptedImageModel> get images;
   @override
   Uint8List? get currentPreviewImage;
+  @override
+  EncryptedImageModel? get currentPreviewImageModel;
   @override
   @JsonKey(ignore: true)
   _$$EncryptionBlocStateImplCopyWith<_$EncryptionBlocStateImpl> get copyWith =>
