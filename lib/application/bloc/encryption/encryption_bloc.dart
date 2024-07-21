@@ -10,6 +10,7 @@ import 'package:file_encrypt/application/bloc/encryption/encryption_event.dart';
 import 'package:file_encrypt/application/bloc/encryption/encryption_state.dart';
 import 'package:file_encrypt/core/database/objectbox.dart';
 import 'package:file_encrypt/core/models/encrypted_image_model.dart';
+import 'package:file_encrypt/core/services/encryption_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,7 +44,7 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
 
             try {
               await compute(
-                  decryptImageIsolateHandler,
+                  EncryptionService.decryptImageIsolateHandler,
                   DecryptFileIsolateArgs(
                     rootIsolateToken: RootIsolateToken.instance!,
                     encryptedImageModel: imageModel,
@@ -91,7 +92,7 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
                     "Warning : Delete image before starting encryption");
               } else {
                 await compute(
-                        encryptImageIsolateHandler,
+                        EncryptionService.encryptImageIsolateHandler,
                         EncryptImageIsolateArgs(
                             rootIsolateToken: RootIsolateToken.instance!,
                             image: image,
@@ -135,7 +136,7 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
             emit(state.copyWith(isLoading: true));
             try {
               List<int> decrypted = await compute(
-                previewImageIsolateHandler,
+                EncryptionService.previewImageIsolateHandler,
                 PreviewImageIsolateArgs(
                   rootIsolateToken: RootIsolateToken.instance!,
                   encryptedImagePath: imageModel.encryptedImagePath,
@@ -146,6 +147,7 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
               emit(
                 state.copyWith(
                     currentPreviewImage: Uint8List.fromList(decrypted),
+                    currentPreviewImageModel: imageModel,
                     isLoading: false),
               );
               FlutterLogs.logInfo(
@@ -163,116 +165,11 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
             }
           },
           closePreview: (EncryptedImageModel image, BuildContext context) {
-            emit(state.copyWith(currentPreviewImage: null));
+            emit(state.copyWith(
+                currentPreviewImage: null, currentPreviewImageModel: null));
           },
         );
       },
     );
   }
-}
-
-FutureOr<String> encryptImageIsolateHandler(
-    EncryptImageIsolateArgs args) async {
-  BackgroundIsolateBinaryMessenger.ensureInitialized(args.rootIsolateToken);
-
-  final encrypt.Key key = encrypt.Key.fromUtf8(args.key);
-  final encrypt.IV iv = encrypt.IV.fromUtf8(args.iv);
-  final encrypt.Encrypter encrypter =
-      encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc));
-
-  final Uint8List bytes = args.image.readAsBytesSync();
-  final encrypt.Encrypted encrypted = encrypter.encryptBytes(bytes, iv: iv);
-
-  final Directory directory = await getApplicationDocumentsDirectory();
-  final File encryptedFile =
-      File('${directory.path}/${args.image.uri.pathSegments.last}.enc');
-  encryptedFile.writeAsBytesSync(encrypted.bytes);
-  return encryptedFile.path;
-}
-
-FutureOr<void> decryptImageIsolateHandler(DecryptFileIsolateArgs args) async {
-  BackgroundIsolateBinaryMessenger.ensureInitialized(args.rootIsolateToken);
-  final encrypt.Key key = encrypt.Key.fromUtf8(args.key);
-  final encrypt.IV iv = encrypt.IV.fromUtf8(args.iv);
-  final encrypt.Encrypter encrypter =
-      encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc));
-
-  final File encryptedFile = File(args.encryptedImageModel.encryptedImagePath);
-  final Uint8List bytes = encryptedFile.readAsBytesSync();
-  final List<int> decrypted =
-      encrypter.decryptBytes(encrypt.Encrypted(bytes), iv: iv);
-
-  PermissionStatus permissionStatus = await Permission.storage.status;
-  if (!permissionStatus.isGranted) {
-    await Permission.storage.request();
-  }
-
-  if (Platform.isIOS) {
-    final Directory? directory = await getDownloadsDirectory();
-    final File decryptedFile =
-        File("$directory/${args.encryptedImageModel.imageName}");
-    decryptedFile.writeAsBytesSync(decrypted);
-  } else {
-    String directory = "/storage/emulated/0/Download/";
-
-    final bool dirDownloadExists = await Directory(directory).exists();
-    if (dirDownloadExists) {
-      directory = "/storage/emulated/0/Download/";
-    } else {
-      directory = "/storage/emulated/0/Downloads/";
-    }
-    final File decryptedFile =
-        File("$directory/${args.encryptedImageModel.imageName}");
-    decryptedFile.writeAsBytesSync(decrypted);
-  }
-}
-
-FutureOr<List<int>> previewImageIsolateHandler(PreviewImageIsolateArgs args) {
-  BackgroundIsolateBinaryMessenger.ensureInitialized(args.rootIsolateToken);
-  final encrypt.Key key = encrypt.Key.fromUtf8(args.key);
-  final encrypt.IV iv = encrypt.IV.fromUtf8(args.iv);
-  final encrypt.Encrypter encrypter =
-      encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc));
-
-  final File encryptedFile = File(args.encryptedImagePath);
-  final Uint8List bytes = encryptedFile.readAsBytesSync();
-  final List<int> decrypted =
-      encrypter.decryptBytes(encrypt.Encrypted(bytes), iv: iv);
-  return decrypted;
-}
-
-class PreviewImageIsolateArgs {
-  final String encryptedImagePath;
-  final String key;
-  final String iv;
-  final RootIsolateToken rootIsolateToken;
-  PreviewImageIsolateArgs(
-      {required this.rootIsolateToken,
-      required this.encryptedImagePath,
-      required this.key,
-      required this.iv});
-}
-
-class DecryptFileIsolateArgs {
-  final EncryptedImageModel encryptedImageModel;
-  final String key;
-  final String iv;
-  final RootIsolateToken rootIsolateToken;
-  DecryptFileIsolateArgs(
-      {required this.rootIsolateToken,
-      required this.encryptedImageModel,
-      required this.key,
-      required this.iv});
-}
-
-class EncryptImageIsolateArgs {
-  final File image;
-  final String key;
-  final String iv;
-  final RootIsolateToken rootIsolateToken;
-  EncryptImageIsolateArgs(
-      {required this.rootIsolateToken,
-      required this.image,
-      required this.key,
-      required this.iv});
 }
