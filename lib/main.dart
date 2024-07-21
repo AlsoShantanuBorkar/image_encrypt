@@ -1,20 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_logs/flutter_logs.dart';
 
-void main() {
-  runApp(const MainApp());
+import 'package:file_encrypt/application/bloc/encryption/encryption_bloc.dart';
+import 'package:file_encrypt/core/database/objectbox.dart';
+import 'package:file_encrypt/core/services/logger.dart';
+import 'package:file_encrypt/ui/screens/home/home_screen.dart';
+
+late final ObjectBoxAdapter objectbox;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await FlutterLogs.initLogs(
+      logLevelsEnabled: [
+        LogLevel.INFO,
+        LogLevel.WARNING,
+        LogLevel.ERROR,
+        LogLevel.SEVERE
+      ],
+      timeStampFormat: TimeStampFormat.TIME_FORMAT_READABLE,
+      directoryStructure: DirectoryStructure.FOR_DATE,
+      logTypesEnabled: ["device", "encryption", "image access", "errors"],
+      logFileExtension: LogFileExtension.LOG,
+      logsWriteDirectoryName: "AppLogs",
+      logsExportDirectoryName: "AppLogs/Exported",
+      debugFileOperations: true,
+      isDebuggable: true);
+
+  FlutterLogs.logInfo("App Start", DateTime.now().toIso8601String(), "");
+  objectbox = await ObjectBoxAdapter.create();
+  Bloc.observer = MyBlocObserver();
+  runApp(const MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => EncryptionBloc(objectBoxAdapter: objectbox),
         ),
+      ],
+      child: const MaterialApp(
+        home: HomeScreen(),
       ),
     );
+  }
+}
+
+class MyBlocObserver extends BlocObserver {
+  @override
+  void onCreate(BlocBase bloc) {
+    super.onCreate(bloc);
+    Log.info('onCreate -- ${bloc.runtimeType}');
+  }
+
+  @override
+  void onChange(BlocBase bloc, Change change) {
+    super.onChange(bloc, change);
+    Log.info('onChange -- ${bloc.runtimeType}, $change');
+  }
+
+  @override
+  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
+    Log.info('onError -- ${bloc.runtimeType}, $error');
+    super.onError(bloc, error, stackTrace);
+  }
+
+  @override
+  void onClose(BlocBase bloc) {
+    super.onClose(bloc);
+    Log.info('onClose -- ${bloc.runtimeType}');
   }
 }
