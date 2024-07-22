@@ -3,11 +3,11 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:file_encrypt/application/bloc/encryption/encryption_event.dart';
-import 'package:file_encrypt/application/bloc/encryption/encryption_state.dart';
-import 'package:file_encrypt/core/database/objectbox.dart';
-import 'package:file_encrypt/core/models/encrypted_image_model.dart';
-import 'package:file_encrypt/core/services/encryption_service.dart';
+import 'package:image_encrypt/application/bloc/encryption/encryption_event.dart';
+import 'package:image_encrypt/application/bloc/encryption/encryption_state.dart';
+import 'package:image_encrypt/core/database/objectbox.dart';
+import 'package:image_encrypt/core/models/encrypted_image_model.dart';
+import 'package:image_encrypt/core/services/encryption_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

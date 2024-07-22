@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
-import 'package:file_encrypt/application/bloc/authentication/auth_event.dart';
-import 'package:file_encrypt/application/bloc/authentication/auth_state.dart';
+import 'package:image_encrypt/application/bloc/authentication/auth_event.dart';
+import 'package:image_encrypt/application/bloc/authentication/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_logs/flutter_logs.dart';

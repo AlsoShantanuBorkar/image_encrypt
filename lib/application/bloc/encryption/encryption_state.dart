@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:file_encrypt/core/models/encrypted_image_model.dart';
+import 'package:image_encrypt/core/models/encrypted_image_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'encryption_state.freezed.dart';

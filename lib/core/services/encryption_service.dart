@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:file_encrypt/core/models/encrypted_image_model.dart';
+import 'package:image_encrypt/core/models/encrypted_image_model.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;

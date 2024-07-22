@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 
-import 'package:file_encrypt/application/bloc/encryption/encryption_bloc.dart';
-import 'package:file_encrypt/application/bloc/encryption/encryption_event.dart';
-import 'package:file_encrypt/application/bloc/encryption/encryption_state.dart';
-import 'package:file_encrypt/core/models/encrypted_image_model.dart';
-import 'package:file_encrypt/core/services/encryption_service.dart';
+import 'package:image_encrypt/application/bloc/encryption/encryption_bloc.dart';
+import 'package:image_encrypt/application/bloc/encryption/encryption_event.dart';
+import 'package:image_encrypt/application/bloc/encryption/encryption_state.dart';
+import 'package:image_encrypt/core/models/encrypted_image_model.dart';
+import 'package:image_encrypt/core/services/encryption_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_logs/flutter_logs.dart';

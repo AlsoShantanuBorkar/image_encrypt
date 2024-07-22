@@ -1,4 +1,4 @@
-import 'package:file_encrypt/core/models/encrypted_image_model.dart';
+import 'package:image_encrypt/core/models/encrypted_image_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
