@@ -24,12 +24,12 @@ class ObjectBoxAdapter {
     // final Directory path = await Directory(path).create(recursive: true);
 
     Store store;
-    log("Store is open ${Store.isOpen(path.path)}");
+    //log("Store is open ${Store.isOpen(path.path)}");
     if (Store.isOpen(path.path)) {
-      log("Objectbox attached in create method");
+      //log("Objectbox attached in create method");
       store = Store.attach(getObjectBoxModel(), path.path);
     } else {
-      log("Objectbox created in create method");
+      //log("Objectbox created in create method");
       store = Store(getObjectBoxModel(), directory: path.path);
     }
     return ObjectBoxAdapter._create(store);
@@ -37,12 +37,12 @@ class ObjectBoxAdapter {
 
   static Future<ObjectBoxAdapter> createWithPath(String path) async {
     Store store;
-    log("Store is open ${Store.isOpen(path)}");
+    //log("Store is open ${Store.isOpen(path)}");
     if (Store.isOpen(path)) {
-      log("Objectbox attached in create method");
+      // log("Objectbox attached in create method");
       store = Store.attach(getObjectBoxModel(), path);
     } else {
-      log("Objectbox created in create method");
+      //log("Objectbox created in create method");
       store = Store(getObjectBoxModel(), directory: path);
     }
     return ObjectBoxAdapter._create(store);
@@ -56,15 +56,15 @@ class ObjectBoxAdapter {
 
     path = await Directory("${path.path}/store").create(recursive: true);
     Store store;
-    log("Store is open ${Store.isOpen(path.path)}");
+    //log("Store is open ${Store.isOpen(path.path)}");
     // try {
     if (Store.isOpen(path.path)) {
-      log("Objectbox attched in attach method");
+      //log("Objectbox attched in attach method");
 
       store = Store.attach(getObjectBoxModel(), path.path);
       return ObjectBoxAdapter._create(store);
     } else {
-      log("Objectbox created in attach method");
+      //log("Objectbox created in attach method");
 
       store = Store(getObjectBoxModel(), directory: path.path);
       return ObjectBoxAdapter._create(store);
