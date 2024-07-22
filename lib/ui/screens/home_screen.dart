@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:file_encrypt/application/bloc/encryption/encryption_bloc.dart';
 import 'package:file_encrypt/application/bloc/encryption/encryption_event.dart';
 import 'package:file_encrypt/application/bloc/encryption/encryption_state.dart';
+import 'package:file_encrypt/ui/screens/auth/reset_pin_screen.dart';
 import 'package:file_encrypt/ui/screens/image_preview.dart';
 
 import 'package:flutter/foundation.dart';
@@ -23,7 +24,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    Permission.manageExternalStorage.request();
     context.read<EncryptionBloc>().add(EncryptionBlocEvent.init());
     super.initState();
   }
@@ -31,6 +31,24 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 60,
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ResetPinScreen()));
+              },
+              title: const Text("Reset Pin"),
+            )
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: const Text('Image Encryption Demo'),
       ),
@@ -38,9 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {
           final ImagePicker picker = ImagePicker();
 
-          picker
-              .pickImage(source: ImageSource.gallery, requestFullMetadata: true)
-              .then((value) {
+          picker.pickImage(source: ImageSource.gallery).then((value) {
             if (value != null) {
               context.read<EncryptionBloc>().add(
                   EncryptionBlocEvent.encryptImage(
