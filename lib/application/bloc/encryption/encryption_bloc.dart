@@ -24,7 +24,7 @@ import 'package:photo_manager/photo_manager.dart';
 
 class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
   late final ObjectBoxAdapter _objectBoxAdapter;
-  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+
   final String _key = '6Vd2Jnd6PQQAcM2wkwEZGaTv0e1kCeEy'; // 32 chars
   final String _iv = '18d049I76d5qbfkj'; // 16 chars
 
@@ -57,8 +57,6 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
                     objectBoxAdapter.images.getAll();
                 emit(state.copyWith(isLoading: false, images: imgs));
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Decrypted Successfully")));
                 FlutterLogs.logInfo(
                     "Decrypt Image",
                     "Image Name: ${imageModel.imageName}",
@@ -124,8 +122,8 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
                 });
               }
             } catch (e) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(const SnackBar(content: Text("Error Occured")));
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Please try again")));
               FlutterLogs.logError("Encrypt Image Error ",
                   "Image Name: ${xfile.name}", "Error : ${e.toString()}");
               emit(state.copyWith(isLoading: false));
