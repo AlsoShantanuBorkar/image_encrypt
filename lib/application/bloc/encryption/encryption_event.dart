@@ -1,7 +1,3 @@
-import 'dart:io';
-
-import 'package:equatable/equatable.dart';
-import 'package:file_encrypt/application/bloc/encryption/encryption_bloc.dart';
 import 'package:file_encrypt/core/models/encrypted_image_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';

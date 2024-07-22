@@ -1,6 +1,4 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:file_encrypt/core/models/encrypted_image_model.dart';
 import 'package:file_encrypt/objectbox.g.dart';
 import 'package:path_provider/path_provider.dart';

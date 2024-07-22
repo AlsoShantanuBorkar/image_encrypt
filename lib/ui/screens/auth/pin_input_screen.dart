@@ -1,10 +1,7 @@
 import 'package:file_encrypt/application/bloc/authentication/auth_bloc.dart';
 import 'package:file_encrypt/application/bloc/authentication/auth_event.dart';
 import 'package:file_encrypt/application/bloc/authentication/auth_state.dart';
-import 'package:file_encrypt/application/bloc/encryption/encryption_bloc.dart';
-import 'package:file_encrypt/application/bloc/encryption/encryption_event.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pinput/pinput.dart';
