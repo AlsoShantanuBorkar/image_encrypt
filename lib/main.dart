@@ -24,7 +24,13 @@ void main() async {
     ],
     timeStampFormat: TimeStampFormat.TIME_FORMAT_READABLE,
     directoryStructure: DirectoryStructure.FOR_DATE,
-    logTypesEnabled: ["device", "encryption", "image access", "errors"],
+    logTypesEnabled: [
+      "device",
+      "encryption",
+      "image access",
+      "errors",
+      "authentication"
+    ],
     logFileExtension: LogFileExtension.LOG,
     logsWriteDirectoryName: "AppLogs",
     logsExportDirectoryName: "AppLogs/Exported",
