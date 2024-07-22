@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:file_encrypt/application/bloc/encryption/encryption_bloc.dart';
 import 'package:file_encrypt/application/bloc/encryption/encryption_event.dart';
 import 'package:file_encrypt/application/bloc/encryption/encryption_state.dart';
+import 'package:file_encrypt/core/models/encrypted_image_model.dart';
 import 'package:file_encrypt/core/services/encryption_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,45 +39,9 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
                   icon: const Icon(Icons.restore),
                 ),
                 IconButton(
-                  onPressed: () {
-                    // context.read<EncryptionBloc>().add(
-                    //     EncryptionBlocEvent.decryptImage(
-                    //         image: state.currentPreviewImageModel!,
-                    //         context: context));
-                    FlutterLogs.logInfo(
-                        "Image Share Selected",
-                        state.currentPreviewImageModel!.imageName,
-                        state.currentPreviewImageModel!.dateCreated
-                            .toIso8601String());
-                    XFile currentImage =
-                        XFile.fromData(state.currentPreviewImage!);
-                    Share.shareXFiles([currentImage])
-                        .then((ShareResult shareResult) {
-                      if (shareResult.status == ShareResultStatus.success) {
-                        FlutterLogs.logInfo(
-                          "Image Shared Successfully ",
-                          state.currentPreviewImageModel!.imageName,
-                          state.currentPreviewImageModel!.dateCreated
-                              .toIso8601String(),
-                        );
-                      } else if (shareResult.status ==
-                          ShareResultStatus.dismissed) {
-                        FlutterLogs.logInfo(
-                          "Image Share Dismissed ",
-                          state.currentPreviewImageModel!.imageName,
-                          state.currentPreviewImageModel!.dateCreated
-                              .toIso8601String(),
-                        );
-                      } else {
-                        FlutterLogs.logInfo(
-                          "Image Share Unavailable ",
-                          state.currentPreviewImageModel!.imageName,
-                          state.currentPreviewImageModel!.dateCreated
-                              .toIso8601String(),
-                        );
-                      }
-                    });
-                  },
+                  onPressed: () => shareImage(
+                      currentPreviewImageModel: state.currentPreviewImageModel!,
+                      currentPreviewImage: state.currentPreviewImage!),
                   icon: const Icon(Icons.share),
                 ),
               ],
@@ -92,5 +57,36 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
                   ));
       },
     );
+  }
+
+  void shareImage(
+      {required EncryptedImageModel currentPreviewImageModel,
+      required Uint8List currentPreviewImage}) {
+    FlutterLogs.logInfo(
+        "Image Share Selected",
+        currentPreviewImageModel.imageName,
+        currentPreviewImageModel.dateCreated.toIso8601String());
+    XFile currentImage = XFile.fromData(currentPreviewImage);
+    Share.shareXFiles([currentImage]).then((ShareResult shareResult) {
+      if (shareResult.status == ShareResultStatus.success) {
+        FlutterLogs.logInfo(
+          "Image Shared Successfully ",
+          currentPreviewImageModel.imageName,
+          currentPreviewImageModel.dateCreated.toIso8601String(),
+        );
+      } else if (shareResult.status == ShareResultStatus.dismissed) {
+        FlutterLogs.logInfo(
+          "Image Share Dismissed ",
+          currentPreviewImageModel.imageName,
+          currentPreviewImageModel.dateCreated.toIso8601String(),
+        );
+      } else {
+        FlutterLogs.logInfo(
+          "Image Share Unavailable ",
+          currentPreviewImageModel.imageName,
+          currentPreviewImageModel.dateCreated.toIso8601String(),
+        );
+      }
+    });
   }
 }
