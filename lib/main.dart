@@ -40,7 +40,7 @@ void main() async {
 
   FlutterLogs.logInfo("App Start", DateTime.now().toIso8601String(), "");
   objectbox = await ObjectBoxAdapter.create();
-  Bloc.observer = MyBlocObserver();
+  // Bloc.observer = MyBlocObserver();
   runApp(const MyApp());
 }
 
@@ -74,31 +74,5 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class MyBlocObserver extends BlocObserver {
-  @override
-  void onCreate(BlocBase bloc) {
-    super.onCreate(bloc);
-    Log.info('onCreate -- ${bloc.runtimeType}');
-  }
-
-  @override
-  void onChange(BlocBase bloc, Change change) {
-    super.onChange(bloc, change);
-    Log.info('onChange -- ${bloc.runtimeType}, $change');
-  }
-
-  @override
-  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
-    Log.info('onError -- ${bloc.runtimeType}, $error');
-    super.onError(bloc, error, stackTrace);
-  }
-
-  @override
-  void onClose(BlocBase bloc) {
-    super.onClose(bloc);
-    Log.info('onClose -- ${bloc.runtimeType}');
   }
 }
