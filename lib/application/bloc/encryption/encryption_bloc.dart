@@ -1,11 +1,8 @@
-import 'dart:async';
-import 'dart:developer';
-import 'dart:io';
-import 'dart:isolate';
-import 'dart:typed_data';
-import 'dart:ui';
+// ignore_for_file: use_build_context_synchronously
 
-import 'package:encrypt/encrypt.dart' as encrypt;
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:file_encrypt/application/bloc/encryption/encryption_event.dart';
 import 'package:file_encrypt/application/bloc/encryption/encryption_state.dart';
 import 'package:file_encrypt/core/database/objectbox.dart';
@@ -16,17 +13,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_logs/flutter_logs.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
   late final ObjectBoxAdapter _objectBoxAdapter;
 
-  final String _key = '6Vd2Jnd6PQQAcM2wkwEZGaTv0e1kCeEy'; // 32 chars
-  final String _iv = '18d049I76d5qbfkj'; // 16 chars
+  late final String _key; // 32 chars
+  late final String _iv; // 16 chars
 
   EncryptionBloc({required ObjectBoxAdapter objectBoxAdapter})
       : super(EncryptionBlocState()) {
@@ -35,7 +29,9 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
     on<EncryptionBlocEvent>(
       (event, emit) async {
         await event.when<FutureOr<void>>(
-          init: () {
+          init: () async {
+            _key = dotenv.env["key"]!;
+            _iv = dotenv.env["iv"]!;
             emit(state.copyWith(images: objectBoxAdapter.images.getAll()));
             FlutterLogs.logInfo("EncryptionBloc Log", "Action: Init Bloc", "");
           },

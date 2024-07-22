@@ -4,17 +4,16 @@ import 'package:file_encrypt/ui/screens/auth/pin_input_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_logs/flutter_logs.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:file_encrypt/application/bloc/encryption/encryption_bloc.dart';
 import 'package:file_encrypt/core/database/objectbox.dart';
-import 'package:file_encrypt/core/utils/logger.dart';
 import 'package:file_encrypt/ui/screens/home_screen.dart';
 
 late final ObjectBoxAdapter objectbox;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await dotenv.load();
   await FlutterLogs.initLogs(
     logLevelsEnabled: [
       LogLevel.INFO,
