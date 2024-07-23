@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:image_encrypt/core/models/encrypted_image_model.dart';
 import 'package:flutter/services.dart';
+import 'package:image_encrypt/core/utils/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:permission_handler/permission_handler.dart';
@@ -56,14 +58,16 @@ class EncryptionService {
       String directory = "/storage/emulated/0/Download/";
 
       final bool dirDownloadExists = await Directory(directory).exists();
-      if (dirDownloadExists) {
-        directory = "/storage/emulated/0/Download/";
-      } else {
-        directory = "/storage/emulated/0/Downloads/";
+
+      try {
+        await Permission.manageExternalStorage.request();
+        File decryptedFile =
+            File("$directory${args.encryptedImageModel.imageName}")
+              ..createSync();
+        decryptedFile.writeAsBytesSync(decrypted);
+      } catch (e) {
+        rethrow;
       }
-      final File decryptedFile =
-          File("$directory/${args.encryptedImageModel.imageName}");
-      decryptedFile.writeAsBytesSync(decrypted);
     }
   }
 

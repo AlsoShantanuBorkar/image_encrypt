@@ -20,7 +20,9 @@ mixin _$EncryptionBlocEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(EncryptedImageModel image, BuildContext context)
         decryptImage,
-    required TResult Function(XFile image, BuildContext context) encryptImage,
+    required TResult Function(
+            File image, String imagePath, BuildContext context)
+        encryptImage,
     required TResult Function(EncryptedImageModel image, BuildContext context)
         previewImage,
     required TResult Function(EncryptedImageModel image, BuildContext context)
@@ -32,7 +34,8 @@ mixin _$EncryptionBlocEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(EncryptedImageModel image, BuildContext context)?
         decryptImage,
-    TResult? Function(XFile image, BuildContext context)? encryptImage,
+    TResult? Function(File image, String imagePath, BuildContext context)?
+        encryptImage,
     TResult? Function(EncryptedImageModel image, BuildContext context)?
         previewImage,
     TResult? Function(EncryptedImageModel image, BuildContext context)?
@@ -44,7 +47,8 @@ mixin _$EncryptionBlocEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(EncryptedImageModel image, BuildContext context)?
         decryptImage,
-    TResult Function(XFile image, BuildContext context)? encryptImage,
+    TResult Function(File image, String imagePath, BuildContext context)?
+        encryptImage,
     TResult Function(EncryptedImageModel image, BuildContext context)?
         previewImage,
     TResult Function(EncryptedImageModel image, BuildContext context)?
@@ -184,7 +188,9 @@ class _$DecryptImageImpl with DiagnosticableTreeMixin implements _DecryptImage {
   TResult when<TResult extends Object?>({
     required TResult Function(EncryptedImageModel image, BuildContext context)
         decryptImage,
-    required TResult Function(XFile image, BuildContext context) encryptImage,
+    required TResult Function(
+            File image, String imagePath, BuildContext context)
+        encryptImage,
     required TResult Function(EncryptedImageModel image, BuildContext context)
         previewImage,
     required TResult Function(EncryptedImageModel image, BuildContext context)
@@ -199,7 +205,8 @@ class _$DecryptImageImpl with DiagnosticableTreeMixin implements _DecryptImage {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(EncryptedImageModel image, BuildContext context)?
         decryptImage,
-    TResult? Function(XFile image, BuildContext context)? encryptImage,
+    TResult? Function(File image, String imagePath, BuildContext context)?
+        encryptImage,
     TResult? Function(EncryptedImageModel image, BuildContext context)?
         previewImage,
     TResult? Function(EncryptedImageModel image, BuildContext context)?
@@ -214,7 +221,8 @@ class _$DecryptImageImpl with DiagnosticableTreeMixin implements _DecryptImage {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(EncryptedImageModel image, BuildContext context)?
         decryptImage,
-    TResult Function(XFile image, BuildContext context)? encryptImage,
+    TResult Function(File image, String imagePath, BuildContext context)?
+        encryptImage,
     TResult Function(EncryptedImageModel image, BuildContext context)?
         previewImage,
     TResult Function(EncryptedImageModel image, BuildContext context)?
@@ -287,7 +295,7 @@ abstract class _$$EncryptImageImplCopyWith<$Res> {
           _$EncryptImageImpl value, $Res Function(_$EncryptImageImpl) then) =
       __$$EncryptImageImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({XFile image, BuildContext context});
+  $Res call({File image, String imagePath, BuildContext context});
 }
 
 /// @nodoc
@@ -302,13 +310,18 @@ class __$$EncryptImageImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? image = null,
+    Object? imagePath = null,
     Object? context = null,
   }) {
     return _then(_$EncryptImageImpl(
       image: null == image
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
-              as XFile,
+              as File,
+      imagePath: null == imagePath
+          ? _value.imagePath
+          : imagePath // ignore: cast_nullable_to_non_nullable
+              as String,
       context: null == context
           ? _value.context
           : context // ignore: cast_nullable_to_non_nullable
@@ -320,16 +333,19 @@ class __$$EncryptImageImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$EncryptImageImpl with DiagnosticableTreeMixin implements _EncryptImage {
-  _$EncryptImageImpl({required this.image, required this.context});
+  _$EncryptImageImpl(
+      {required this.image, required this.imagePath, required this.context});
 
   @override
-  final XFile image;
+  final File image;
+  @override
+  final String imagePath;
   @override
   final BuildContext context;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'EncryptionBlocEvent.encryptImage(image: $image, context: $context)';
+    return 'EncryptionBlocEvent.encryptImage(image: $image, imagePath: $imagePath, context: $context)';
   }
 
   @override
@@ -338,6 +354,7 @@ class _$EncryptImageImpl with DiagnosticableTreeMixin implements _EncryptImage {
     properties
       ..add(DiagnosticsProperty('type', 'EncryptionBlocEvent.encryptImage'))
       ..add(DiagnosticsProperty('image', image))
+      ..add(DiagnosticsProperty('imagePath', imagePath))
       ..add(DiagnosticsProperty('context', context));
   }
 
@@ -347,11 +364,13 @@ class _$EncryptImageImpl with DiagnosticableTreeMixin implements _EncryptImage {
         (other.runtimeType == runtimeType &&
             other is _$EncryptImageImpl &&
             (identical(other.image, image) || other.image == image) &&
+            (identical(other.imagePath, imagePath) ||
+                other.imagePath == imagePath) &&
             (identical(other.context, context) || other.context == context));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, image, context);
+  int get hashCode => Object.hash(runtimeType, image, imagePath, context);
 
   @JsonKey(ignore: true)
   @override
@@ -364,14 +383,16 @@ class _$EncryptImageImpl with DiagnosticableTreeMixin implements _EncryptImage {
   TResult when<TResult extends Object?>({
     required TResult Function(EncryptedImageModel image, BuildContext context)
         decryptImage,
-    required TResult Function(XFile image, BuildContext context) encryptImage,
+    required TResult Function(
+            File image, String imagePath, BuildContext context)
+        encryptImage,
     required TResult Function(EncryptedImageModel image, BuildContext context)
         previewImage,
     required TResult Function(EncryptedImageModel image, BuildContext context)
         closePreview,
     required TResult Function() init,
   }) {
-    return encryptImage(image, context);
+    return encryptImage(image, imagePath, context);
   }
 
   @override
@@ -379,14 +400,15 @@ class _$EncryptImageImpl with DiagnosticableTreeMixin implements _EncryptImage {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(EncryptedImageModel image, BuildContext context)?
         decryptImage,
-    TResult? Function(XFile image, BuildContext context)? encryptImage,
+    TResult? Function(File image, String imagePath, BuildContext context)?
+        encryptImage,
     TResult? Function(EncryptedImageModel image, BuildContext context)?
         previewImage,
     TResult? Function(EncryptedImageModel image, BuildContext context)?
         closePreview,
     TResult? Function()? init,
   }) {
-    return encryptImage?.call(image, context);
+    return encryptImage?.call(image, imagePath, context);
   }
 
   @override
@@ -394,7 +416,8 @@ class _$EncryptImageImpl with DiagnosticableTreeMixin implements _EncryptImage {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(EncryptedImageModel image, BuildContext context)?
         decryptImage,
-    TResult Function(XFile image, BuildContext context)? encryptImage,
+    TResult Function(File image, String imagePath, BuildContext context)?
+        encryptImage,
     TResult Function(EncryptedImageModel image, BuildContext context)?
         previewImage,
     TResult Function(EncryptedImageModel image, BuildContext context)?
@@ -403,7 +426,7 @@ class _$EncryptImageImpl with DiagnosticableTreeMixin implements _EncryptImage {
     required TResult orElse(),
   }) {
     if (encryptImage != null) {
-      return encryptImage(image, context);
+      return encryptImage(image, imagePath, context);
     }
     return orElse();
   }
@@ -451,10 +474,12 @@ class _$EncryptImageImpl with DiagnosticableTreeMixin implements _EncryptImage {
 
 abstract class _EncryptImage implements EncryptionBlocEvent {
   factory _EncryptImage(
-      {required final XFile image,
+      {required final File image,
+      required final String imagePath,
       required final BuildContext context}) = _$EncryptImageImpl;
 
-  XFile get image;
+  File get image;
+  String get imagePath;
   BuildContext get context;
   @JsonKey(ignore: true)
   _$$EncryptImageImplCopyWith<_$EncryptImageImpl> get copyWith =>
@@ -544,7 +569,9 @@ class _$PreviewImageImpl with DiagnosticableTreeMixin implements _PreviewImage {
   TResult when<TResult extends Object?>({
     required TResult Function(EncryptedImageModel image, BuildContext context)
         decryptImage,
-    required TResult Function(XFile image, BuildContext context) encryptImage,
+    required TResult Function(
+            File image, String imagePath, BuildContext context)
+        encryptImage,
     required TResult Function(EncryptedImageModel image, BuildContext context)
         previewImage,
     required TResult Function(EncryptedImageModel image, BuildContext context)
@@ -559,7 +586,8 @@ class _$PreviewImageImpl with DiagnosticableTreeMixin implements _PreviewImage {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(EncryptedImageModel image, BuildContext context)?
         decryptImage,
-    TResult? Function(XFile image, BuildContext context)? encryptImage,
+    TResult? Function(File image, String imagePath, BuildContext context)?
+        encryptImage,
     TResult? Function(EncryptedImageModel image, BuildContext context)?
         previewImage,
     TResult? Function(EncryptedImageModel image, BuildContext context)?
@@ -574,7 +602,8 @@ class _$PreviewImageImpl with DiagnosticableTreeMixin implements _PreviewImage {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(EncryptedImageModel image, BuildContext context)?
         decryptImage,
-    TResult Function(XFile image, BuildContext context)? encryptImage,
+    TResult Function(File image, String imagePath, BuildContext context)?
+        encryptImage,
     TResult Function(EncryptedImageModel image, BuildContext context)?
         previewImage,
     TResult Function(EncryptedImageModel image, BuildContext context)?
@@ -724,7 +753,9 @@ class _$ClosePreviewImpl with DiagnosticableTreeMixin implements _ClosePreview {
   TResult when<TResult extends Object?>({
     required TResult Function(EncryptedImageModel image, BuildContext context)
         decryptImage,
-    required TResult Function(XFile image, BuildContext context) encryptImage,
+    required TResult Function(
+            File image, String imagePath, BuildContext context)
+        encryptImage,
     required TResult Function(EncryptedImageModel image, BuildContext context)
         previewImage,
     required TResult Function(EncryptedImageModel image, BuildContext context)
@@ -739,7 +770,8 @@ class _$ClosePreviewImpl with DiagnosticableTreeMixin implements _ClosePreview {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(EncryptedImageModel image, BuildContext context)?
         decryptImage,
-    TResult? Function(XFile image, BuildContext context)? encryptImage,
+    TResult? Function(File image, String imagePath, BuildContext context)?
+        encryptImage,
     TResult? Function(EncryptedImageModel image, BuildContext context)?
         previewImage,
     TResult? Function(EncryptedImageModel image, BuildContext context)?
@@ -754,7 +786,8 @@ class _$ClosePreviewImpl with DiagnosticableTreeMixin implements _ClosePreview {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(EncryptedImageModel image, BuildContext context)?
         decryptImage,
-    TResult Function(XFile image, BuildContext context)? encryptImage,
+    TResult Function(File image, String imagePath, BuildContext context)?
+        encryptImage,
     TResult Function(EncryptedImageModel image, BuildContext context)?
         previewImage,
     TResult Function(EncryptedImageModel image, BuildContext context)?
@@ -866,7 +899,9 @@ class _$InitImpl with DiagnosticableTreeMixin implements _Init {
   TResult when<TResult extends Object?>({
     required TResult Function(EncryptedImageModel image, BuildContext context)
         decryptImage,
-    required TResult Function(XFile image, BuildContext context) encryptImage,
+    required TResult Function(
+            File image, String imagePath, BuildContext context)
+        encryptImage,
     required TResult Function(EncryptedImageModel image, BuildContext context)
         previewImage,
     required TResult Function(EncryptedImageModel image, BuildContext context)
@@ -881,7 +916,8 @@ class _$InitImpl with DiagnosticableTreeMixin implements _Init {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(EncryptedImageModel image, BuildContext context)?
         decryptImage,
-    TResult? Function(XFile image, BuildContext context)? encryptImage,
+    TResult? Function(File image, String imagePath, BuildContext context)?
+        encryptImage,
     TResult? Function(EncryptedImageModel image, BuildContext context)?
         previewImage,
     TResult? Function(EncryptedImageModel image, BuildContext context)?
@@ -896,7 +932,8 @@ class _$InitImpl with DiagnosticableTreeMixin implements _Init {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(EncryptedImageModel image, BuildContext context)?
         decryptImage,
-    TResult Function(XFile image, BuildContext context)? encryptImage,
+    TResult Function(File image, String imagePath, BuildContext context)?
+        encryptImage,
     TResult Function(EncryptedImageModel image, BuildContext context)?
         previewImage,
     TResult Function(EncryptedImageModel image, BuildContext context)?

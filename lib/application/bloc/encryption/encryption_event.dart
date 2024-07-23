@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:image_encrypt/core/models/encrypted_image_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -12,7 +14,9 @@ abstract class EncryptionBlocEvent with _$EncryptionBlocEvent {
       {required EncryptedImageModel image,
       required BuildContext context}) = _DecryptImage;
   factory EncryptionBlocEvent.encryptImage(
-      {required XFile image, required BuildContext context}) = _EncryptImage;
+      {required File image,
+      required String imagePath,
+      required BuildContext context}) = _EncryptImage;
   factory EncryptionBlocEvent.previewImage(
       {required EncryptedImageModel image,
       required BuildContext context}) = _PreviewImage;

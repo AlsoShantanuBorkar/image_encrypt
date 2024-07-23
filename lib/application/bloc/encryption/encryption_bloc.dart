@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_encrypt/application/bloc/encryption/encryption_event.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_logs/flutter_logs.dart';
+import 'package:image_encrypt/core/utils/logger.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -60,65 +62,57 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
                     "Image Name: ${imageModel.imageName} Creation Date: ${imageModel.dateCreated.toIso8601String()}");
               });
             } catch (e) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(const SnackBar(content: Text("Error Occured")));
-              emit(state.copyWith(isLoading: true));
+              // ScaffoldMessenger.of(context)
+              //     .showSnackBar(const SnackBar(content: Text("Error Occured")));
+              emit(state.copyWith(isLoading: false));
               FlutterLogs.logError("EncryptionBloc Log", "Decryption Error",
                   "Error : ${e.toString()} Image Name: ${imageModel.imageName}");
             }
           },
-          encryptImage: (XFile xfile, BuildContext context) async {
+          encryptImage: (File image, String id, BuildContext context) async {
             emit(state.copyWith(isLoading: true));
-            File image = File(xfile.path);
-            String id = xfile.name.split(".").first;
-            try {
-              List<String> isDeleted =
-                  await PhotoManager.editor.deleteWithIds([id]);
+            List<String> isDeleted =
+                await PhotoManager.editor.deleteWithIds([id]);
 
+            try {
               if (isDeleted.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text("Delete Photo to save to locker")));
-                emit(state.copyWith(isLoading: false));
-                FlutterLogs.logWarn(
-                    "EncryptionBloc Log",
-                    "Encryption Deletion Warning",
-                    "Warning : Delete image before starting encryption Image Name: ${xfile.name}");
-              } else {
-                await compute(
-                        EncryptionService.encryptImageIsolateHandler,
-                        EncryptImageIsolateArgs(
-                            rootIsolateToken: RootIsolateToken.instance!,
-                            image: image,
-                            key: _key,
-                            iv: _iv))
-                    .then((path) {
-                  EncryptedImageModel encryptedImageModel = EncryptedImageModel(
-                    dateCreated: DateTime.now(),
-                    imageName: image.uri.pathSegments.last,
-                    encryptedImagePath: path,
-                    originalImagePath: image.path,
-                    originalImageExtension:
-                        image.uri.pathSegments.last.split(".").last,
-                  );
-                  _objectBoxAdapter.addEncryptedImageModel(encryptedImageModel);
-
-                  emit(
-                    state.copyWith(
-                      images: [...state.images, encryptedImageModel],
-                      isLoading: false,
-                    ),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Encrypted Successfully")));
-                  FlutterLogs.logInfo("EncryptionBloc Log ", "Image Encrypted",
-                      "Image Name: ${encryptedImageModel.imageName} Creation Date: ${encryptedImageModel.dateCreated.toIso8601String()}");
-                });
+                    content: Text("Allow photo deletion to encrypt photo")));
+                return;
               }
+              await compute(
+                      EncryptionService.encryptImageIsolateHandler,
+                      EncryptImageIsolateArgs(
+                          rootIsolateToken: RootIsolateToken.instance!,
+                          image: image,
+                          key: _key,
+                          iv: _iv))
+                  .then((path) {
+                EncryptedImageModel encryptedImageModel = EncryptedImageModel(
+                  dateCreated: DateTime.now(),
+                  imageName: image.uri.pathSegments.last,
+                  encryptedImagePath: path,
+                  originalImagePath: image.path,
+                  originalImageExtension:
+                      image.uri.pathSegments.last.split(".").last,
+                );
+                _objectBoxAdapter.addEncryptedImageModel(encryptedImageModel);
+
+                emit(
+                  state.copyWith(
+                    images: [...state.images, encryptedImageModel],
+                    isLoading: false,
+                  ),
+                );
+
+                FlutterLogs.logInfo("EncryptionBloc Log ", "Image Encrypted",
+                    "Image Name: ${encryptedImageModel.imageName} Creation Date: ${encryptedImageModel.dateCreated.toIso8601String()}");
+              });
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Please try again")));
               FlutterLogs.logError("EncryptionBloc Log ", "Encryption Error ",
-                  "Error : ${e.toString()} Image Name: ${xfile.name}");
+                  "Error : ${e.toString()} Image Name: ${image.uri.pathSegments.last}");
               emit(state.copyWith(isLoading: false));
             }
           },
