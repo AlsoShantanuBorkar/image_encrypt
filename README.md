@@ -60,13 +60,10 @@ This inconsistency is due to the fact that there are two options for picking the
 - A set of high-level APIs over PointyCastle for two-way cryptography.
 - A set of cryptographic hashing functions for Dart.
 
-### Image Picker
-
-- A Flutter plugin for iOS and Android for picking images from the image library, and taking new pictures with the camera.
-
 ### Photo Manager
 
 - A Flutter plugin that provides assets abstraction management APIs without UI integration, you can get assets (image/video/audio) on Android, iOS, macOS and OpenHarmony.
+- Allows getting images according to their albums.
 - Provides method to delete photo once selected by user.
 
 ### Share Plus
