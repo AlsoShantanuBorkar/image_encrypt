@@ -25,10 +25,10 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
       await event.when<FutureOr<void>>(
         init: () async {
           emit(state.copyWith(isLoading: true));
-
           bool isPin = await secureStorage.containsKey(key: "user_pin");
           emit(state.copyWith(isLoading: false, isExistingUser: isPin));
-          FlutterLogs.logInfo("AuthBloc Log", "Action: Init", "");
+          FlutterLogs.logInfo(
+              "AuthBloc Log", "Action: Init", "Is Existing User : $isPin");
         },
         selectAuthMethod: (AuthMethod authMethod) {
           if (authMethod == AuthMethod.face ||

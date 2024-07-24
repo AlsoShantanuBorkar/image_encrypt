@@ -4,7 +4,6 @@ import 'package:image_encrypt/core/models/encrypted_image_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:image_picker/image_picker.dart';
 
 part 'encryption_event.freezed.dart';
 

@@ -1,13 +1,9 @@
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_encrypt/application/bloc/encryption/encryption_bloc.dart';
 import 'package:image_encrypt/application/bloc/encryption/encryption_event.dart';
-import 'package:image_encrypt/core/utils/logger.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class ImageListScreen extends StatefulWidget {

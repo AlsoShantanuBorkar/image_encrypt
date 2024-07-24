@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:image_encrypt/application/bloc/encryption/encryption_bloc.dart';
 import 'package:image_encrypt/application/bloc/encryption/encryption_event.dart';
@@ -10,9 +9,7 @@ import 'package:image_encrypt/ui/screens/image_preview.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:photo_manager/photo_manager.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,9 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     context.read<EncryptionBloc>().add(EncryptionBlocEvent.init());
 
-    Permission.manageExternalStorage.request().then((onValue) {
-      log(onValue.name);
-    });
+    Permission.manageExternalStorage.request();
     super.initState();
   }
 

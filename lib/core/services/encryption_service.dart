@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 import 'package:image_encrypt/core/models/encrypted_image_model.dart';
 import 'package:flutter/services.dart';
-import 'package:image_encrypt/core/utils/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:permission_handler/permission_handler.dart';
