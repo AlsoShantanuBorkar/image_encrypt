@@ -70,7 +70,6 @@ class _ImageListScreenState extends State<ImageListScreen> {
                           context: context,
                         ),
                       );
-                  Navigator.popUntil(context, (route) => route.isFirst);
                 },
                 child: Image.file(
                   snapshot.data![index].file,

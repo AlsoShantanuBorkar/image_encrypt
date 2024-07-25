@@ -30,7 +30,6 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
               actions: [
                 IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
                     context.read<EncryptionBloc>().add(
                         EncryptionBlocEvent.decryptImage(
                             image: state.currentPreviewImageModel!,

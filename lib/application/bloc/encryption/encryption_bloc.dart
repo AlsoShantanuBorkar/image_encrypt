@@ -52,7 +52,9 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
                 List<EncryptedImageModel> imgs =
                     objectBoxAdapter.images.getAll();
                 emit(state.copyWith(isLoading: false, images: imgs));
-
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Image Decrypted")));
+                Navigator.pop(context);
                 FlutterLogs.logInfo(
                     "EncryptionBloc Log",
                     "Action: Decrypt Image",
@@ -104,12 +106,17 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
 
                 FlutterLogs.logInfo("EncryptionBloc Log ", "Image Encrypted",
                     "Image Name: ${encryptedImageModel.imageName} Creation Date: ${encryptedImageModel.dateCreated.toIso8601String()}");
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Image Encrypted")));
+                Navigator.popUntil(context, (route) => route.isFirst);
               });
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Please try again")));
+
               FlutterLogs.logError("EncryptionBloc Log ", "Encryption Error ",
                   "Error : ${e.toString()} Image Name: ${image.uri.pathSegments.last}");
+
               emit(state.copyWith(isLoading: false));
             }
           },
