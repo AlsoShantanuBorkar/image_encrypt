@@ -25,6 +25,16 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
       builder: (context, state) {
         return Scaffold(
             appBar: AppBar(
+              leading: GestureDetector(
+                onTap: () {
+                  if (state.isLoading) {
+                    return;
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Icon(Icons.arrow_back),
+              ),
               title: const Text("Image Preview"),
               actions: [
                 IconButton(

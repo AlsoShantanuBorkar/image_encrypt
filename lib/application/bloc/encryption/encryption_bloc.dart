@@ -61,8 +61,8 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
                     "Image Name: ${imageModel.imageName} Creation Date: ${imageModel.dateCreated.toIso8601String()}");
               });
             } catch (e) {
-              // ScaffoldMessenger.of(context)
-              //     .showSnackBar(const SnackBar(content: Text("Error Occured")));
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const SnackBar(content: Text("Error Occured")));
               emit(state.copyWith(isLoading: false));
               FlutterLogs.logError("EncryptionBloc Log", "Decryption Error",
                   "Error : ${e.toString()} Image Name: ${imageModel.imageName}");
@@ -119,14 +119,7 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Please try again")));
-              showDialog(
-                context: context,
-                builder: (context) => Dialog(
-                  child: Column(
-                    children: [Text(e.toString())],
-                  ),
-                ),
-              );
+
               FlutterLogs.logError("EncryptionBloc Log ", "Encryption Error ",
                   "Error : ${e.toString()} Image Name: ${image.uri.pathSegments.last}");
 
