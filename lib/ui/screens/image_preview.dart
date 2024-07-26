@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:image_encrypt/application/bloc/encryption/encryption_bloc.dart';
 import 'package:image_encrypt/application/bloc/encryption/encryption_event.dart';
 import 'package:image_encrypt/application/bloc/encryption/encryption_state.dart';

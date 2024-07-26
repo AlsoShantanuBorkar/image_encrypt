@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:image_encrypt/application/bloc/encryption/encryption_bloc.dart';
 import 'package:image_encrypt/application/bloc/encryption/encryption_event.dart';
 import 'package:image_encrypt/application/bloc/encryption/encryption_state.dart';
@@ -30,22 +28,25 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 60,
-            ),
-            ListTile(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ResetPinScreen()));
-              },
-              title: const Text("Reset Pin"),
-            )
-          ],
+      drawer: SafeArea(
+        child: Drawer(
+          child: Column(
+            children: [
+              Container(
+                height: 60,
+                color: Colors.blue,
+              ),
+              ListTile(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ResetPinScreen()));
+                },
+                title: const Text("Reset Pin"),
+              )
+            ],
+          ),
         ),
       ),
       appBar: AppBar(
