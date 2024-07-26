@@ -61,7 +61,11 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
                     ),
                   )
                 : Center(
-                    child: Image.memory(state.currentPreviewImage!),
+                    child: Image.memory(
+                      state.currentPreviewImage!,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.width,
+                    ),
                   ));
       },
     );
