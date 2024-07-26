@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 import 'package:image_encrypt/core/models/encrypted_image_model.dart';
 import 'package:flutter/services.dart';
