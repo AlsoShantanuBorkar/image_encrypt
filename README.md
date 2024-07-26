@@ -14,10 +14,6 @@ This inconsistency is due to the fact that there are two options for picking the
 
 - Due to these inconsistences in image_picker and the inability to fetch original image path I have created custom image selector that can resolve this issue.
 
-- Also due to the above issue of not being able to access original image path, the decrypted image is stored in Download/ folder of the application rather than its original location.
-
-- It is possible to get the original location of the image but it would require more time.
-
 ### User Interface
 
 - The UI for the app is kept simple, focusing on functionality rather than appearence
