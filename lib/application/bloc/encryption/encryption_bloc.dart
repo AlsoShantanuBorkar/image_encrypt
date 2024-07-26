@@ -68,8 +68,11 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
                   "Error : ${e.toString()} Image Name: ${imageModel.imageName}");
             }
           },
-          encryptImage: (File image, String id, BuildContext context) async {
+          encryptImage: (File image, String id, String originalImagePath,
+              BuildContext context) async {
             emit(state.copyWith(isLoading: true));
+            Uint8List copiedBytes = image.readAsBytesSync();
+
             List<String> isDeleted =
                 await PhotoManager.editor.deleteWithIds([id]);
 
@@ -83,7 +86,8 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
                       EncryptionService.encryptImageIsolateHandler,
                       EncryptImageIsolateArgs(
                           rootIsolateToken: RootIsolateToken.instance!,
-                          image: image,
+                          image: copiedBytes,
+                          imageNameWithExt: image.uri.pathSegments.last,
                           key: _key,
                           iv: _iv))
                   .then((path) {
@@ -91,7 +95,7 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
                   dateCreated: DateTime.now(),
                   imageName: image.uri.pathSegments.last,
                   encryptedImagePath: path,
-                  originalImagePath: image.path,
+                  originalImagePath: originalImagePath,
                   originalImageExtension:
                       image.uri.pathSegments.last.split(".").last,
                 );
@@ -106,14 +110,23 @@ class EncryptionBloc extends Bloc<EncryptionBlocEvent, EncryptionBlocState> {
 
                 FlutterLogs.logInfo("EncryptionBloc Log ", "Image Encrypted",
                     "Image Name: ${encryptedImageModel.imageName} Creation Date: ${encryptedImageModel.dateCreated.toIso8601String()}");
+
                 ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("Image Encrypted")));
+
                 Navigator.popUntil(context, (route) => route.isFirst);
               });
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Please try again")));
-
+              showDialog(
+                context: context,
+                builder: (context) => Dialog(
+                  child: Column(
+                    children: [Text(e.toString())],
+                  ),
+                ),
+              );
               FlutterLogs.logError("EncryptionBloc Log ", "Encryption Error ",
                   "Error : ${e.toString()} Image Name: ${image.uri.pathSegments.last}");
 

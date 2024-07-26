@@ -14,7 +14,8 @@ abstract class EncryptionBlocEvent with _$EncryptionBlocEvent {
       required BuildContext context}) = _DecryptImage;
   factory EncryptionBlocEvent.encryptImage(
       {required File image,
-      required String imagePath,
+      required String id,
+      required String originalImagePath,
       required BuildContext context}) = _EncryptImage;
   factory EncryptionBlocEvent.previewImage(
       {required EncryptedImageModel image,

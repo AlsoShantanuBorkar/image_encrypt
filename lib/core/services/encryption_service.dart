@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:image_encrypt/core/models/encrypted_image_model.dart';
 import 'package:flutter/services.dart';
@@ -18,12 +19,12 @@ class EncryptionService {
     final encrypt.Encrypter encrypter =
         encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc));
 
-    final Uint8List bytes = args.image.readAsBytesSync();
+    final Uint8List bytes = args.image;
     final encrypt.Encrypted encrypted = encrypter.encryptBytes(bytes, iv: iv);
 
     final Directory directory = await getApplicationDocumentsDirectory();
     final File encryptedFile =
-        File('${directory.path}/${args.image.uri.pathSegments.last}.enc');
+        File('${directory.path}/${args.imageNameWithExt}.enc');
     encryptedFile.writeAsBytesSync(encrypted.bytes);
     return encryptedFile.path;
   }
@@ -46,17 +47,21 @@ class EncryptionService {
     if (!permissionStatus.isGranted) {
       await Permission.storage.request();
     }
-
+    if (args.encryptedImageModel.originalImagePath.isNotEmpty &&
+        !args.encryptedImageModel.originalImagePath.contains("cache")) {
+      final File decryptedFile =
+          File(args.encryptedImageModel.originalImagePath)..create();
+      decryptedFile.writeAsBytesSync(decrypted);
+      return;
+    }
     if (Platform.isIOS) {
       final Directory? directory = await getDownloadsDirectory();
       final File decryptedFile =
-          File("$directory/${args.encryptedImageModel.imageName}");
+          File("$directory/${args.encryptedImageModel.imageName}")
+            ..createSync();
       decryptedFile.writeAsBytesSync(decrypted);
     } else {
       String directory = "/storage/emulated/0/Download/";
-
-      final bool dirDownloadExists = await Directory(directory).exists();
-
       try {
         await Permission.manageExternalStorage.request();
         File decryptedFile =
@@ -110,13 +115,15 @@ class DecryptFileIsolateArgs {
 }
 
 class EncryptImageIsolateArgs {
-  final File image;
+  final Uint8List image;
   final String key;
   final String iv;
+  final String imageNameWithExt;
   final RootIsolateToken rootIsolateToken;
   EncryptImageIsolateArgs(
       {required this.rootIsolateToken,
       required this.image,
       required this.key,
+      required this.imageNameWithExt,
       required this.iv});
 }

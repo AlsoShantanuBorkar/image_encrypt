@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,7 +68,9 @@ class _ImageListScreenState extends State<ImageListScreen> {
                   context.read<EncryptionBloc>().add(
                         EncryptionBlocEvent.encryptImage(
                           image: snapshot.data![index].file,
-                          imagePath: snapshot.data![index].id,
+                          id: snapshot.data![index].id,
+                          originalImagePath:
+                              snapshot.data![index].originalImagePath,
                           context: context,
                         ),
                       );
@@ -89,7 +93,8 @@ class _ImageListScreenState extends State<ImageListScreen> {
     for (var i = 0; i < assetEntity.length; i++) {
       File? file = await assetEntity[i].originFile;
       if (file != null) {
-        images.add(_EncryptImageArgs(file: file, id: assetEntity[i].id));
+        images.add(_EncryptImageArgs(
+            file: file, id: assetEntity[i].id, originalImagePath: file.path));
       }
     }
     return images;
@@ -99,7 +104,9 @@ class _ImageListScreenState extends State<ImageListScreen> {
 class _EncryptImageArgs {
   final File file;
   final String id;
+  final String originalImagePath;
   _EncryptImageArgs({
+    required this.originalImagePath,
     required this.file,
     required this.id,
   });
