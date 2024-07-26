@@ -1,4 +1,3 @@
-
 import 'package:image_encrypt/application/bloc/authentication/auth_bloc.dart';
 import 'package:image_encrypt/application/bloc/authentication/auth_event.dart';
 import 'package:image_encrypt/application/bloc/authentication/auth_state.dart';
@@ -20,11 +19,13 @@ class _PinInputScreenState extends State<PinInputScreen> {
   final FocusNode enterPinFocusNode = FocusNode();
   final FocusNode confirmPinFocusNode = FocusNode();
 
-  final GlobalKey<FormState> singleFormKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> doubleFormKey = GlobalKey<FormState>();
+  late final GlobalKey<FormState> singleFormKey;
+  late final GlobalKey<FormState> doubleFormKey;
 
   @override
   void initState() {
+    singleFormKey = GlobalKey<FormState>();
+    doubleFormKey = GlobalKey<FormState>();
     Permission.manageExternalStorage.request();
 
     context.read<AuthBloc>().add(AuthBlocEvent.init());
@@ -41,32 +42,47 @@ class _PinInputScreenState extends State<PinInputScreen> {
                 AppBar(title: const Text("Authentication"), centerTitle: true),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text("Enter Your Pin"),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Pinput(
-                    focusNode: enterPinFocusNode,
-                    controller: enterPinController,
-                    length: 6,
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      enterPinFocusNode.unfocus();
-                      context.read<AuthBloc>().add(AuthBlocEvent.enterPin(
-                          pin: enterPinController.text, context: context));
-                    },
-                    child: const Text("Confirm"),
-                  )
-                ],
+              child: Form(
+                key: singleFormKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("Enter Your Pin"),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Pinput(
+                      focusNode: enterPinFocusNode,
+                      controller: enterPinController,
+                      length: 6,
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null) {
+                          return "Enter a pin";
+                        } else if (value.isEmpty) {
+                          return "Pin cannot be empty";
+                        } else if (value.length < 6) {
+                          return "Pin should be 6 Digits long";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (singleFormKey.currentState!.validate()) {
+                          enterPinFocusNode.unfocus();
+                          context.read<AuthBloc>().add(AuthBlocEvent.enterPin(
+                              pin: enterPinController.text, context: context));
+                        }
+                      },
+                      child: const Text("Confirm"),
+                    )
+                  ],
+                ),
               ),
             ),
           );
@@ -93,6 +109,16 @@ class _PinInputScreenState extends State<PinInputScreen> {
                     controller: enterPinController,
                     length: 6,
                     keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null) {
+                        return "Enter a pin";
+                      } else if (value.isEmpty) {
+                        return "Pin cannot be empty";
+                      } else if (value.length < 6) {
+                        return "Pin should be 6 Digits long";
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 10,
@@ -100,7 +126,13 @@ class _PinInputScreenState extends State<PinInputScreen> {
                   const Text("Confirm Pin"),
                   Pinput(
                     validator: (value) {
-                      if (value! != enterPinController.text) {
+                      if (value == null) {
+                        return "Enter a pin";
+                      } else if (value.isEmpty) {
+                        return "Pin cannot be empty";
+                      } else if (value.length < 6) {
+                        return "Pin should be 6 Digits long";
+                      } else if (value != enterPinController.text) {
                         return "Pin does not match";
                       } else {
                         return null;
@@ -118,10 +150,13 @@ class _PinInputScreenState extends State<PinInputScreen> {
                     onPressed: () {
                       enterPinFocusNode.unfocus();
                       confirmPinFocusNode.unfocus();
-                      if (enterPinController.text ==
-                          confirmPinController.text) {
-                        context.read<AuthBloc>().add(AuthBlocEvent.enterPin(
-                            pin: confirmPinController.text, context: context));
+                      if (doubleFormKey.currentState!.validate()) {
+                        if (enterPinController.text ==
+                            confirmPinController.text) {
+                          context.read<AuthBloc>().add(AuthBlocEvent.enterPin(
+                              pin: confirmPinController.text,
+                              context: context));
+                        }
                       }
                     },
                     child: const Text("Confirm"),

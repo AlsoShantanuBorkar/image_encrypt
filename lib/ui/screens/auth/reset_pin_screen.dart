@@ -18,7 +18,14 @@ class _ResetPinScreenState extends State<ResetPinScreen> {
   final FocusNode enterPinFocusNode = FocusNode();
   final FocusNode confirmPinFocusNode = FocusNode();
 
-  final GlobalKey<FormState> doubleFormKey = GlobalKey<FormState>();
+  late final GlobalKey<FormState> doubleFormKey;
+
+  @override
+  void initState() {
+    doubleFormKey = GlobalKey<FormState>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthBlocState>(
@@ -36,7 +43,7 @@ class _ResetPinScreenState extends State<ResetPinScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text("Enter Your Pin"),
+                  const Text("Enter New Pin"),
                   const SizedBox(
                     height: 10,
                   ),
@@ -45,14 +52,30 @@ class _ResetPinScreenState extends State<ResetPinScreen> {
                     controller: enterPinController,
                     length: 6,
                     keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null) {
+                        return "Enter a pin";
+                      } else if (value.isEmpty) {
+                        return "Pin cannot be empty";
+                      } else if (value.length < 6) {
+                        return "Pin should be 6 Digits long";
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text("Confirm Pin"),
+                  const Text("Confirm New Pin"),
                   Pinput(
                     validator: (value) {
-                      if (value! != enterPinController.text) {
+                      if (value == null) {
+                        return "Enter a pin";
+                      } else if (value.isEmpty) {
+                        return "Pin cannot be empty";
+                      } else if (value.length < 6) {
+                        return "Pin should be 6 Digits long";
+                      } else if (value != enterPinController.text) {
                         return "Pin does not match";
                       } else {
                         return null;
